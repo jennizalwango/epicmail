@@ -7,8 +7,9 @@ class ListUserView(generics.ListCreateAPIView):
   queryset = User.objects.all()
   serializer_class = UserSerializer
 
-  def list(self, request):
-    queryset = self.get_queryset()
-    serializer = UserSerializer(queryset, many=True)
-    return Response(serializer.data)
-# Create your views here.
+  def get_queryset(self):
+    fname = self.kwargs.get('firstname', None)
+    if fname:
+      return User.objects.filter(first_name__iexact = fname)
+    else:
+      return User.objects.all()
